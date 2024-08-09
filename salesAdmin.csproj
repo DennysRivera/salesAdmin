@@ -6,4 +6,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="Views/Sales/CreateRequest.cshtml" />
+    <Content Remove="Views/Sales/Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views/Sales/CreateRequest.cshtml" />
+    <None Include="Views/Sales/Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.7" />
+  </ItemGroup>
+
 </Project>
