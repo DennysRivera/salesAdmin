@@ -1,0 +1,17 @@
+@model Product
+
+<form method="post" asp-action="AddProduct">
+    <label asp-for="Name">Product name</label>
+    <input asp-for="Name">
+    <span asp-validation-for="Name"></span>
+    <label asp-for="UnitPrice">Price Per Unit</label>
+    <input asp-for="UnitPrice">
+    <span asp-validation-for="UnitPrice"></span>
+    <label asp-for="Quantity">Number Of Units Available</label>
+    <input asp-for="Quantity">
+    <span asp-validation-for="Quantity"></span>
+    <label asp-for="Active">Ready For Sales?</label>
+    <input asp-for="Active" type="radio" value="true">
+    <span asp-validation-for="Active"></span>
+    <button type="submit">Add Product</button>
+</form>
