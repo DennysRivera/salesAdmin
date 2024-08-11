@@ -1,0 +1,20 @@
+@model User
+
+<form method="post" asp-action="CreateUser">
+    <label asp-for="FirstName">First Name</label>
+    <input asp-for="FirstName">
+    <span asp-validation-for="FirstName"></span>
+    <label asp-for="LastName">Last Name</label>
+    <input asp-for="LastName">
+    <span asp-validation-for="LastName"></span>
+    <label asp-for="Mail">Email</label>
+    <input asp-for="Mail">
+    <span asp-validation-for="Mail"></span>
+    <label asp-for="Password">Password</label>
+    <input asp-for="Password">
+    <span asp-validation-for="Password"></span>
+    <label asp-for="Type">User's Role</label>
+    <input asp-for="Type">
+    <span asp-validation-for="Type" type="radio"></span>
+    <button type="submit">Create User</button>
+</form>
