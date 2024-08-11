@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace salesAdmin.Models;
 
-[Table("products")]
 public class Product
 {
     [Key]    

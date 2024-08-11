@@ -5,11 +5,12 @@ using salesAdmin.Repository.Interfaces;
 
 namespace salesAdmin.Repository;
 
-public class UserRepository: IUserRepository
+public class UserRepository : IUserRepository
 {
-private readonly ApplicationDbContext context;
+    private readonly ApplicationDbContext context;
 
-    public UserRepository(ApplicationDbContext context){
+    public UserRepository(ApplicationDbContext context)
+    {
         this.context = context;
     }
 
