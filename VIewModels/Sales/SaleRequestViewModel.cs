@@ -1,9 +1,11 @@
-﻿using salesAdmin.Models;
+﻿using salesAdmin.DTOs.Sale;
+using salesAdmin.Models;
 
 namespace salesAdmin.ViewModels.Sales;
 
 public class SaleRequestViewModel
 {
-    public User? User { get; set; }
-    public IEnumerable<Product>? Products { get; set; }
+    public CreateSaleDto? NewSale { get; set; }
+    public IEnumerable<Product>? ExistingProducts { get; set; }
+    public List<Product>? ProductsToSell { get; set;}
 }
