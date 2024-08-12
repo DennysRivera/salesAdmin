@@ -1,21 +1,40 @@
 @using salesAdmin.DTOs.User
 @model CreateUserDto
 
-<form method="post" asp-action="CreateUser">
-    <label asp-for="FirstName">First Name</label>
-    <input asp-for="FirstName">
-    <span asp-validation-for="FirstName"></span>
-    <label asp-for="LastName">Last Name</label>
-    <input asp-for="LastName">
-    <span asp-validation-for="LastName"></span>
-    <label asp-for="Mail">Email</label>
-    <input asp-for="Mail">
-    <span asp-validation-for="Mail"></span>
-    <label asp-for="Password">Password</label>
-    <input asp-for="Password">
-    <span asp-validation-for="Password"></span>
-    <label asp-for="Type">User's Role</label>
-    <input asp-for="Type">
-    <span asp-validation-for="Type" type="radio"></span>
-    <button type="submit">Create User</button>
-</form>
+<div class="w-50 p-3 position-relative start-50 translate-middle-x border border-light-subtle rounded-3">
+    <form method="post" asp-action="CreateUser">
+        <div class="mb-2">
+            <label asp-for="FirstName" class="form-label">First Name</label>
+            <span asp-validation-for="FirstName" class="form-text text-danger"></span>
+            <input asp-for="FirstName" class="form-control">
+        </div>
+        <div class="mb-2">
+            <label asp-for="LastName" class="form-label">Last Name</label>
+            <span asp-validation-for="LastName" class="form-text text-danger"></span>
+            <input asp-for="LastName" class="form-control">
+        </div>
+        <div class="mb-2">
+            <label asp-for="Mail" class="form-label">Email</label>
+            <span asp-validation-for="Mail" class="form-text text-danger"></span>
+            <input asp-for="Mail" class="form-control">
+        </div>
+        <div class="mb-2">
+            <label asp-for="Password" class="form-label">Password</label>
+            <span asp-validation-for="Password" class="form-text text-danger"></span>
+            <input asp-for="Password" class="form-control">
+        </div>
+        <div class="mb-2">
+            <label class="form-label">User's Role</label>
+            <span asp-validation-for="Type" class="form-text text-danger"></span>
+            <div>
+                <label for="seller" asp-for="Type" class="form-label">Seller</label>
+                <input id="seller" asp-for="Type" class="form-check-input" type="radio" value="seller">
+                <label for="accountant" asp-for="Type" class="form-label">Accountant</label>
+                <input id="accountant" asp-for="Type" class="form-check-input" type="radio" value="accountant">
+                <label for="admin" asp-for="Type" class="form-label">Admin</label>
+                <input id="admin" asp-for="Type" class="form-check-input" type="radio" value="admin">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary position-relative w-25 start-50 translate-middle-x">Create User</button>
+    </form>
+</div>
