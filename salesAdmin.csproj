@@ -7,12 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views/Sales/CreateRequest.cshtml" />
     <Content Remove="Views/Sales/Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views/Sales/CreateRequest.cshtml" />
     <None Include="Views/Sales/Index.cshtml" />
   </ItemGroup>
 
