@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using salesAdmin.DTOs.Product;
+using salesAdmin.DTOs.User;
 using salesAdmin.Models;
 using salesAdmin.Repository.Interfaces;
 
@@ -16,17 +18,28 @@ public class AdminController : Controller
     }
     public IActionResult AddProduct()
     {
-        
+
         return View();
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddProduct(Product product){
-        if(!ModelState.IsValid){
-            return View(product);
+    public async Task<IActionResult> AddProduct(CreateProductDto productDto)
+    {
+        if (ModelState.IsValid)
+        {
+            Product product = new()
+            {
+                Name = productDto.Name,
+                UnitPrice = productDto.UnitPrice,
+                Quantity = productDto.Quantity,
+                Active = productDto.Active
+            };
+
+            await productRepository.CreateProduct(product);
+            return RedirectToAction("AddProduct");
         }
-        await productRepository.CreateProduct(product);
-        return RedirectToAction("AddProduct");
+
+        return View(productDto);
     }
 
     public IActionResult CreateUser()
@@ -35,11 +48,21 @@ public class AdminController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateUser(User user){
-        if(!ModelState.IsValid){
-            return View(user);
+    public async Task<IActionResult> CreateUser(CreateUserDto userDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            User user = new()
+            {
+                Type = userDto.Type,
+                FirstName = userDto.FirstName,
+                LastName = userDto.LastName,
+                Mail = userDto.Mail,
+                Password = userDto.Password
+            };
+            await userRepository.CreateUser(user);
+            return RedirectToAction("CreateUser");
         }
-        await userRepository.CreateUser(user);
-        return RedirectToAction("CreateUser");
+        return View(userDto);
     }
 }
