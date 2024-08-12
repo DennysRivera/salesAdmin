@@ -50,7 +50,7 @@ public class AdminController : Controller
     [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserDto userDto)
     {
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             User user = new()
             {
