@@ -32,4 +32,8 @@
     <_ContentIncludedByDefault Remove="Views/Admin/AddProduct.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="VIewModels/User/" />
+  </ItemGroup>
+
 </Project>

@@ -1,18 +1,137 @@
-@using salesAdmin.DTOs.Product
-@model CreateProductDto
+@using salesAdmin.ViewModels.Products
+@model ProductsViewModel
 
-<form method="post" asp-action="AddProduct">
-    <label asp-for="Name">Product name</label>
-    <input asp-for="Name">
-    <span asp-validation-for="Name"></span>
-    <label asp-for="UnitPrice">Price Per Unit</label>
-    <input asp-for="UnitPrice">
-    <span asp-validation-for="UnitPrice"></span>
-    <label asp-for="Quantity">Number Of Units Available</label>
-    <input asp-for="Quantity">
-    <span asp-validation-for="Quantity"></span>
-    <label asp-for="Active">Ready For Sales?</label>
-    <input asp-for="Active" type="radio" value="true">
-    <span asp-validation-for="Active"></span>
-    <button type="submit">Add Product</button>
-</form>
+@{
+
+}
+
+<div>
+    <h1>Products</h1>
+    <div class="container-lg d-flex justify-content-end">
+        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#form-post-container">
+            Add Product
+        </button>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-dark">
+                <th>Name</th>
+                <th>Price per unit</th>
+                <th>Quantity</th>
+                <th>Available</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ExistingProducts is not null)
+            {
+                @foreach (var p in Model.ExistingProducts)
+                {
+                    <tr>
+                        <td>@p.Id @p.Name</td>
+                        <td>@p.UnitPrice</td>
+                        <td>@p.Quantity</td>
+                        <td>@p.Active</td>
+                        <td>
+                            <div>
+                                <button id="btn-submit-delete-@p.Id" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#form-delete-container"
+                                    data-bs-whatever="@p.Id" onclick="deleteProduct(@p.Id)">Remove</button>
+                                <button class="btn btn-info">Edit</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <p>No products yet</p>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div id="form-post-container" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Product Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="new-product-form" asp-action="AddProduct">
+                    <div class="mb-2">
+                        <label asp-for="NewProduct.Name" class="form-label">Product name</label>
+                        <span asp-validation-for="NewProduct.Name" class="form-text text-danger"></span>
+                        <input asp-for="NewProduct.Name" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label asp-for="NewProduct.UnitPrice" class="form-label">Price per unit</label>
+                        <span id="unit-price-span" asp-validation-for="NewProduct.UnitPrice"
+                            class="form-text text-danger"></span>
+                        <input id="unit-price" asp-for="NewProduct.UnitPrice" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label asp-for="NewProduct.Quantity" class="form-label">Number of units available</label>
+                        <span asp-validation-for="NewProduct.Quantity" class="form-text text-danger"></span>
+                        <input asp-for="NewProduct.Quantity" class="form-control" min="1">
+                    </div>
+                    <div class="mb-2">
+                        <label>Ready for sales?</label>
+                        <div>
+                            <span asp-validation-for="NewProduct.Active" class="form-text text-danger"></span>
+                            <label asp-for="NewProduct.Active" class="form-label">Yes
+                                <input asp-for="NewProduct.Active" class="form-check-input" type="radio" value="true">
+                            </label>
+                            <label asp-for="NewProduct.Active" class="form-label">No
+                                <input asp-for="NewProduct.Active" class="form-check-input" type="radio" value="false">
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="btn-submit-form" type="button" class="btn btn-primary">Add Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="form-delete-container" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete the roduct?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="DeleteProduct" method="post">
+                    <p></p>
+                    <input id="input-delete-id" type="hidden" asp-for="Product.Id" readonly>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Yes, delete it</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("btn-submit-form").addEventListener("click", () => {
+        document.getElementById("new-product-form").submit();
+    });
+
+    document.getElementById("unit-price").addEventListener("change", (e) => {
+        let price = e.target.textContent;
+    });
+    if (price.match(/[A-Z]/ig)) {
+        document.getElementById("unit-price-span").textContent = "Letters are not allowed";
+    }
+
+    function deleteProduct(id){
+        const modalBodyInput = document.getElementById('input-delete-id');
+        console.log(modalBodyInput)
+        modalBodyInput.value = id;
+    }
+    
+</script>
