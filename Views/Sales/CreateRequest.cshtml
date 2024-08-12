@@ -1,17 +1,19 @@
-@{
-    ViewData["Title"] = "Sales Requests";
-}
+@using salesAdmin.DTOs.Sale
+@model CreateSaleDto
 
-<div>
-    <h1>Sales Requests</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <td></td>
-            </tr>
-        </thead>
-    </table>
-</div>
+<form action="CreateRequest" method="post">
+    <label asp-for="Client">Client Name</label>
+    <input asp-for="Client">
+    <span asp-validation-for="Client"></span>
+    <label asp-for="Description">Description</label>
+    <input asp-for="Description">
+    <span asp-validation-for="Description"></span>
+    <label asp-for="Contact">Client Contact</label>
+    <input asp-for="Contact">
+    <span asp-validation-for="Contact"></span>
+    <label asp-for="TotalPrice">Total Price</label>
+    <input asp-for="TotalPrice">
+    <span></span>
+<span asp-validation-for="TotalPrice"></span>
+    <button type="submit">Create Sale Request</button>
+</form>
