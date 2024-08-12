@@ -1,20 +1,58 @@
-@using salesAdmin.DTOs.Sale
-@using salesAdmin.DTOs.Product
-@model CreateSaleDto
+@using salesAdmin.ViewModels.Sales
+@model SaleRequestViewModel
 
-<form action="CreateRequest" method="post">
-    <label asp-for="Client">Client Name</label>
-    <input asp-for="Client">
-    <span asp-validation-for="Client"></span>
-    <label asp-for="Description">Description</label>
-    <input asp-for="Description">
-    <span asp-validation-for="Description"></span>
-    <label asp-for="Contact">Client Contact</label>
-    <input asp-for="Contact">
-    <span asp-validation-for="Contact"></span>
-    <label asp-for="TotalPrice">Total Price</label>
-    <input asp-for="TotalPrice">
-    <span></span>
-<span asp-validation-for="TotalPrice"></span>
-    <button type="submit">Create Sale Request</button>
-</form>
+<div>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Unit price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(Model.ProductsToSell is not null){
+                    @foreach(var p in Model.ProductsToSell){
+                        <tr>
+                            <td>@p.Name</td>
+                            <td>@p.Quantity</td>
+                            <td>@p.UnitPrice</td>
+                            <td>
+                                <button>+</button>
+                                <button>-</button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="w-50 p-3 position-relative start-50 translate-middle-x border border-light-subtle rounded-3">
+        <form action="CreateRequest" method="post">
+            <div class="mb-2">
+                <label asp-for="NewSale.Client" class="form-label">Client Name</label>
+                <span asp-validation-for="NewSale.Client" class="form-text text-danger"></span>
+                <input asp-for="NewSale.Client" class="form-control">
+            </div>
+            <div class="mb-2">
+                <label asp-for="NewSale.Description" class="form-label">Description</label>
+                <span asp-validation-for="NewSale.Description" class="form-text text-danger"></span>
+                <input asp-for="NewSale.Description" class="form-control">
+            </div>
+            <div class="mb-2">
+                <label asp-for="NewSale.Contact" class="form-label">Client Contact</label>
+                <span asp-validation-for="NewSale.Contact" class="form-text text-danger"></span>
+                <input asp-for="NewSale.Contact" class="form-control">
+            </div>
+            <div class="mb-2">
+                <label asp-for="NewSale.TotalPrice" class="form-label">Total Price</label>
+                <span asp-validation-for="NewSale.TotalPrice" class="form-text text-danger"></span>
+                <input asp-for="NewSale.TotalPrice" class="form-control" readonly>
+            </div>
+            <button type="submit"
+                class="btn btn-primary position-relative w-50 start-50 translate-middle-x">Sell</button>
+        </form>
+    </div>
+</div>

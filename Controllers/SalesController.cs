@@ -1,22 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using salesAdmin.Data;
+using salesAdmin.DTOs.Product;
 using salesAdmin.DTOs.Sale;
 using salesAdmin.Models;
 using salesAdmin.Repository.Interfaces;
+using salesAdmin.ViewModels.Sales;
 
 namespace salesAdmin.Controllers;
 
 public class SalesController : Controller
 {
     private readonly ISaleRepository saleRepository;
-    public SalesController(ISaleRepository saleRepository)
+    private readonly IProductRepository productRepository;
+    public SalesController(ISaleRepository saleRepository, IProductRepository productRepository)
     {
         this.saleRepository = saleRepository;
+        this.productRepository = productRepository;
     }
 
-    public IActionResult CreateRequest()
+    public async Task<IActionResult> CreateRequest()
     {
-        return View();
+        List<ProductDto> existingProducts = [];
+        IEnumerable<Product> products = await productRepository.GetProducts();
+        foreach (Product p in products)
+        {
+            existingProducts.Add(new ProductDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                UnitPrice = p.UnitPrice,
+                Quantity = p.Quantity,
+                Active = p.Active
+            });
+        }
+         SaleRequestViewModel viewModel = new()
+        {
+            ExistingProducts = products
+        };
+        return View(viewModel);
     }
 
     [HttpPost]
