@@ -14,10 +14,11 @@ public class SaleRepository : ISaleRepository
         this.context = context;
     }
 
-    public async Task CreateSale(Sale sale)
+    public async Task<int> CreateSale(Sale sale)
     {
         context.Add(sale);
         await context.SaveChangesAsync();
+        return sale.Id;
     }
 
     public async Task DeleteSale(int id)

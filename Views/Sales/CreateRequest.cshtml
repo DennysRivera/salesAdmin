@@ -1,13 +1,14 @@
 @using salesAdmin.ViewModels.Sales
 @model SaleRequestViewModel
 
-<div>
-    <div>
+<h1>Sales Requests</h1>
+<div class="d-flex justify-content-evenly">
+    <div class="w-50 p-3 border border-light-subtle rounded-3">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
             data-bs-target="#existing-products-modal">Add product to sale</button>
-        <table>
+        <table class="table table-striped">
             <thead>
-                <tr>
+                <tr class="table-dark">
                     <th>Product</th>
                     <th>Quantity to sell</th>
                     <th>Unit price</th>
@@ -19,7 +20,7 @@
             </tbody>
         </table>
     </div>
-    <div class="w-50 p-3 position-relative start-50 translate-middle-x border border-light-subtle rounded-3">
+    <div class="w-50 p-3 border border-light-subtle rounded-3">
         <form asp-action="CreateRequest" method="post">
             <div class="mb-2">
                 <label asp-for="NewSale.Client" class="form-label">Client Name</label>
@@ -57,9 +58,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table>
+                <table class="table table-striped">
                     <thead>
-                        <tr>
+                        <tr class="table-dark">
                             <th>Product</th>
                             <th>Quantity available</th>
                             <th>Price per unit</th>
@@ -68,7 +69,7 @@
                         </tr>
                     </thead>
                     <tbody id="available-products-table-body">
-                        
+
                     </tbody>
                 </table>
             </div>
@@ -91,7 +92,7 @@
     updateTableSale();
     updateTableAvailable();
 
-    function updateTableSale(){
+    function updateTableSale() {
         productsToSellTable.innerHTML = "";
         productsToSell.forEach((el) => {
             productsToSellTable.innerHTML += `
@@ -100,8 +101,8 @@
                 <td>${el.sellQuantity}</td>
                 <td>${el.unitPrice}</td>
                 <td>
-                    <button type="button" onclick="addOneProduct(${el.id})">+</button>
-                    <button type="button" onclick="removeOneProduct(${el.id})">-</button>
+                    <button class="badge rounded-pill btn btn-success" type="button" onclick="addOneProduct(${el.id})">+</button>
+                    <button class="badge rounded-pill btn btn-warning" type="button" onclick="removeOneProduct(${el.id})">-</button>
                 </td>
             </tr>
             `
@@ -118,13 +119,13 @@
                 <td>${el.quantity}</td>
                 <td>${el.unitPrice}</td>
                 <td><input id="quantity-sell-${el.id}" type="number" min="0" max="${el.quantity}" class="w-50"></td>
-                <td><button type="button" onclick="addProductToSell(${el.id})">Add</button></td>
+                <td><button class="btn btn-primary" type="button" onclick="addProductToSell(${el.id})">Add</button></td>
             </tr>
             `
         });
     }
 
-    function updateTotalPrice(){
+    function updateTotalPrice() {
         let totalPrice = 0;
         productsToSell.forEach(p => {
             totalPrice += p.unitPrice * p.sellQuantity;
@@ -145,18 +146,18 @@
         }
     }
 
-    function addOneProduct(id){
+    function addOneProduct(id) {
         index = productsToSell.findIndex((p) => p.id === id);
-        if(productsToSell[index].sellQuantity < productsToSell[index].quantity){
+        if (productsToSell[index].sellQuantity < productsToSell[index].quantity) {
             productsToSell[index].sellQuantity++;
             updateTableSale();
             updateTotalPrice();
         }
     }
 
-    function removeOneProduct(id){
+    function removeOneProduct(id) {
         index = productsToSell.findIndex((p) => p.id === id);
-        if(productsToSell[index].sellQuantity > 1){
+        if (productsToSell[index].sellQuantity > 1) {
             productsToSell[index].sellQuantity--;
             updateTableSale();
             updateTotalPrice();

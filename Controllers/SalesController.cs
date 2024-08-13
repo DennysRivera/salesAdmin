@@ -42,11 +42,14 @@ public class SalesController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateRequest(SaleRequestViewModel viewModel, string productsInList)
+    public async Task<IActionResult> CreateRequest(SaleRequestViewModel viewModel, string soldProducts)
     {
         if (ModelState.IsValid)
         {
-            var soldProducts = JsonSerializer.Deserialize<List<ProductDto>>(productsInList);
+            List<ProductDto> soldProductsList = [];
+            soldProducts = soldProducts.Remove(0, 1);
+            soldProducts = soldProducts.Remove(soldProducts.Length-1, 1);
+            
             Sale sale = new()
             {
                 Client = viewModel.NewSale.Client,
@@ -56,12 +59,18 @@ public class SalesController : Controller
                 CreationDate = DateTime.Now.ToUniversalTime(),
                 IsPaid = false
             };
+            
+            int saleId = await saleRepository.CreateSale(sale);
 
-            await saleRepository.CreateSale(sale);
             return RedirectToAction("CreateRequest");
         }
         else
         {
+            foreach(var state in ModelState){
+                foreach(var error in state.Value.Errors){
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
             List<ProductDto> existingProducts = [];
             IEnumerable<Product> products = await productRepository.GetProducts();
             foreach (Product p in products)
