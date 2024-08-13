@@ -1,36 +1,27 @@
 @using salesAdmin.ViewModels.Sales
 @model SaleRequestViewModel
 
-<div>
-    <div>
-        <table>
+<h1>Sales Requests</h1>
+<div class="d-flex justify-content-evenly">
+    <div class="w-50 p-3 border border-light-subtle rounded-3">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#existing-products-modal">Add product to sale</button>
+        <table class="table table-striped">
             <thead>
-                <tr>
+                <tr class="table-dark">
                     <th>Product</th>
-                    <th>Quantity</th>
+                    <th>Quantity to sell</th>
                     <th>Unit price</th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
-                @if(Model.ProductsToSell is not null){
-                    @foreach(var p in Model.ProductsToSell){
-                        <tr>
-                            <td>@p.Name</td>
-                            <td>@p.Quantity</td>
-                            <td>@p.UnitPrice</td>
-                            <td>
-                                <button>+</button>
-                                <button>-</button>
-                            </td>
-                        </tr>
-                    }
-                }
+            <tbody id="sale-table-body">
+
             </tbody>
         </table>
     </div>
-    <div class="w-50 p-3 position-relative start-50 translate-middle-x border border-light-subtle rounded-3">
-        <form action="CreateRequest" method="post">
+    <div class="w-50 p-3 border border-light-subtle rounded-3">
+        <form asp-action="CreateRequest" method="post">
             <div class="mb-2">
                 <label asp-for="NewSale.Client" class="form-label">Client Name</label>
                 <span asp-validation-for="NewSale.Client" class="form-text text-danger"></span>
@@ -49,10 +40,127 @@
             <div class="mb-2">
                 <label asp-for="NewSale.TotalPrice" class="form-label">Total Price</label>
                 <span asp-validation-for="NewSale.TotalPrice" class="form-text text-danger"></span>
-                <input asp-for="NewSale.TotalPrice" class="form-control" readonly>
+                <input id="total-price" asp-for="NewSale.TotalPrice" class="form-control" readonly>
             </div>
+            <input type="hidden" id="sold-products-input" name="soldProducts">
             <button type="submit"
                 class="btn btn-primary position-relative w-50 start-50 translate-middle-x">Sell</button>
         </form>
     </div>
+
 </div>
+
+<div id="existing-products-modal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Available products</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="table-dark">
+                            <th>Product</th>
+                            <th>Quantity available</th>
+                            <th>Price per unit</th>
+                            <th>Amount to sell</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="available-products-table-body">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let availableProducts = @Html.Raw(Json.Serialize(Model.ExistingProducts));
+    let productsToSell = [];
+    let availableProductsTable = document.getElementById("available-products-table-body");
+    let productsToSellTable = document.getElementById("sale-table-body");
+    let totalPriceInput = document.getElementById("total-price");
+    let soldProducts = document.getElementById("sold-products-input");
+
+    console.log(availableProducts)
+    updateTableSale();
+    updateTableAvailable();
+
+    function updateTableSale() {
+        productsToSellTable.innerHTML = "";
+        productsToSell.forEach((el) => {
+            productsToSellTable.innerHTML += `
+            <tr>
+                <td>${el.name}</td>
+                <td>${el.sellQuantity}</td>
+                <td>${el.unitPrice}</td>
+                <td>
+                    <button class="badge rounded-pill btn btn-success" type="button" onclick="addOneProduct(${el.id})">+</button>
+                    <button class="badge rounded-pill btn btn-warning" type="button" onclick="removeOneProduct(${el.id})">-</button>
+                </td>
+            </tr>
+            `
+        });
+        soldProducts.value = JSON.stringify(productsToSell);
+    }
+
+    function updateTableAvailable() {
+        availableProductsTable.innerHTML = "";
+        availableProducts.forEach((el) => {
+            availableProductsTable.innerHTML += `
+            <tr>
+                <td>${el.name}</td>
+                <td>${el.quantity}</td>
+                <td>${el.unitPrice}</td>
+                <td><input id="quantity-sell-${el.id}" type="number" min="0" max="${el.quantity}" class="w-50"></td>
+                <td><button class="btn btn-primary" type="button" onclick="addProductToSell(${el.id})">Add</button></td>
+            </tr>
+            `
+        });
+    }
+
+    function updateTotalPrice() {
+        let totalPrice = 0;
+        productsToSell.forEach(p => {
+            totalPrice += p.unitPrice * p.sellQuantity;
+        });
+        totalPriceInput.value = totalPrice;
+    }
+
+    function addProductToSell(id) {
+        index = availableProducts.findIndex((p) => p.id === id);
+        const input = document.getElementById(`quantity-sell-${id}`);
+        if (input.value > 0) {
+            let product = availableProducts.splice(index, 1)[0];
+            product.sellQuantity = Number(input.value);
+            productsToSell.push(product);
+            updateTableSale();
+            updateTableAvailable();
+            updateTotalPrice();
+        }
+    }
+
+    function addOneProduct(id) {
+        index = productsToSell.findIndex((p) => p.id === id);
+        if (productsToSell[index].sellQuantity < productsToSell[index].quantity) {
+            productsToSell[index].sellQuantity++;
+            updateTableSale();
+            updateTotalPrice();
+        }
+    }
+
+    function removeOneProduct(id) {
+        index = productsToSell.findIndex((p) => p.id === id);
+        if (productsToSell[index].sellQuantity > 1) {
+            productsToSell[index].sellQuantity--;
+            updateTableSale();
+            updateTotalPrice();
+        }
+    }
+</script>
